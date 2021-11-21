@@ -1,0 +1,44 @@
+body {
+    background-color: #dbdbdb;
+    font-size: 100%;
+}
+form input#stickyText {
+    width: 350px;
+}
+
+/* sticky */
+ul#stickies li {
+    display: block;
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size: 200%;
+    text-decoration: none;
+    color: black;
+    background-color: LightGoldenRodYellow;
+    list-style: none;
+    
+    float: left;
+    z-index: 1;
+    margin: 30px;
+    padding: 15px 15px 50px 15px;
+    width: 200px;
+    height: 200px;
+    
+    border: 1px solid #bfbfbf;
+    box-shadow: 2px 2px 4px #00000066;
+    transition: all 0.5s ease-in;
+    overflow: hidden;
+}
+ul#stickies li:nth-child(even) {
+    transform: rotate(2deg);
+}
+ul#stickies li:nth-child(odd) {
+    transform: rotate(-1deg);
+}
+ul#stickies li:nth-child(3n) {
+    transform: rotate(1deg);
+}
+ul#stickies li:hover {
+    box-shadow: 5px 5px 6px #00000066;
+    transform: rotate(0deg) scale(1.25);
+    z-index: 10;
+}
