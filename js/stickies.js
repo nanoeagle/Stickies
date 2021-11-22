@@ -1,22 +1,29 @@
-window.onload = showAllExistingStickies;
+window.onload = function() {
+    showAllExistingStickies();
+    document.getElementById("buttonAdd").onclick = createSticky;
+}
 
 function showAllExistingStickies() {
-    for (var i = 0; i < localStorage.length; i++) {
-        showStickyIfExistsAtIndex(i);
+    for (var key in localStorage) showStickyIfExistsAt(key);
+}
+
+function showStickyIfExistsAt(key) {
+    if (key.startsWith("sticky_", 0)) {
+        var stickyText = localStorage[key];
+        addStickyToDomWith(stickyText);
     }
 }
 
-function showStickyIfExistsAtIndex(index) {
-    var key = localStorage.key(index);
-    if (key.startsWith("sticky", 0)) {
-        var stickyValue = localStorage[key];
-        addStickyToDomWith(stickyValue);
-    }
-}
-
-function addStickyToDomWith(stickyValue) {
+function addStickyToDomWith(stickyText) {
     var sticky = document.createElement("li");
     sticky.className = "sticky";
-    sticky.innerHTML = stickyValue;
+    sticky.innerHTML = stickyText;
     document.getElementById("stickies").appendChild(sticky);
+}
+
+function createSticky() {
+    var stickyText = document.getElementById("stickyText").value;
+    var key = "sticky_" + localStorage.length;
+    localStorage.setItem(key, stickyText);
+    addStickyToDomWith(stickyText);
 }
