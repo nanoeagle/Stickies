@@ -1,29 +1,51 @@
 window.onload = function() {
-    showAllExistingStickies();
     document.getElementById("buttonAdd").onclick = createSticky;
+    showAllExistingStickies();
+}
+
+function createSticky() {
+    var key = "sticky_" + (new Date()).getTime();
+    addNewKeyToStickyKeyArray(key);
+
+    var stickyText = document.getElementById("stickyText").value;
+    localStorage[key] = stickyText;
+    addStickyToDom(stickyText);
+}
+
+function addNewKeyToStickyKeyArray(key) {
+    var stickyKeyArray = getStickyKeyArray();
+    stickyKeyArray.push(key);
+    localStorage["stickyKeyArray"] = JSON.stringify(stickyKeyArray);
 }
 
 function showAllExistingStickies() {
-    for (var key in localStorage) showStickyIfExistsAt(key);
+    var stickyKeyArray = getStickyKeyArray();
+    for (var key of stickyKeyArray) showStickyMappedFrom(key);
 }
 
-function showStickyIfExistsAt(key) {
-    if (key.startsWith("sticky_", 0)) {
-        var stickyText = localStorage[key];
-        addStickyToDomWith(stickyText);
-    }
+function getStickyKeyArray() {
+    var stickyKeyArray = localStorage["stickyKeyArray"];
+    if (stickyKeyArray) {
+        stickyKeyArray = JSON.parse(stickyKeyArray);
+    } else 
+        stickyKeyArray = createStickyKeyArray();
+    return stickyKeyArray;
 }
 
-function addStickyToDomWith(stickyText) {
+function createStickyKeyArray() {
+    var stickyKeyArray = [];
+    localStorage["stickyKeyArray"] = JSON.stringify(stickyKeyArray);
+    return stickyKeyArray;
+}
+
+function showStickyMappedFrom(key) {
+    var stickyText = localStorage[key];
+    addStickyToDom(stickyText);
+}
+
+function addStickyToDom(stickyText) {
     var sticky = document.createElement("li");
     sticky.className = "sticky";
     sticky.innerHTML = stickyText;
     document.getElementById("stickies").appendChild(sticky);
-}
-
-function createSticky() {
-    var stickyText = document.getElementById("stickyText").value;
-    var key = "sticky_" + localStorage.length;
-    localStorage.setItem(key, stickyText);
-    addStickyToDomWith(stickyText);
 }
