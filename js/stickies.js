@@ -4,23 +4,23 @@ window.onload = function() {
 }
 
 function createSticky() {
-    var key = "sticky_" + (new Date()).getTime();
-    addNewKeyToStickyKeyArray(key);
+    var stickyKey = "sticky_" + (new Date()).getTime();
+    addNewKeyToStickyKeyArray(stickyKey);
 
     var stickyText = document.getElementById("stickyText").value;
-    localStorage[key] = stickyText;
-    addStickyToDom(stickyText);
+    localStorage[stickyKey] = stickyText;
+    addStickyToDom(stickyKey, stickyText);
 }
 
-function addNewKeyToStickyKeyArray(key) {
+function addNewKeyToStickyKeyArray(stickyKey) {
     var stickyKeyArray = getStickyKeyArray();
-    stickyKeyArray.push(key);
+    stickyKeyArray.push(stickyKey);
     localStorage["stickyKeyArray"] = JSON.stringify(stickyKeyArray);
 }
 
 function showAllExistingStickies() {
     var stickyKeyArray = getStickyKeyArray();
-    for (var key of stickyKeyArray) showStickyMappedFrom(key);
+    for (var stickyKey of stickyKeyArray) showStickyMappedFrom(stickyKey);
 }
 
 function getStickyKeyArray() {
@@ -38,14 +38,36 @@ function createStickyKeyArray() {
     return stickyKeyArray;
 }
 
-function showStickyMappedFrom(key) {
-    var stickyText = localStorage[key];
-    addStickyToDom(stickyText);
+function showStickyMappedFrom(stickyKey) {
+    var stickyText = localStorage[stickyKey];
+    addStickyToDom(stickyKey, stickyText);
 }
 
-function addStickyToDom(stickyText) {
+function addStickyToDom(stickyKey, stickyText) {
     var sticky = document.createElement("li");
+    sticky.id = stickyKey;
     sticky.className = "sticky";
     sticky.innerHTML = stickyText;
+    sticky.onclick = deleteStickyIfConfirmed;
     document.getElementById("stickies").appendChild(sticky);
+}
+
+function deleteStickyIfConfirmed(event) {
+    if (window.confirm("DELETE this sticky?")) {
+        var stickyKey = event.target.id;
+        localStorage.removeItem(stickyKey);
+        deleteStickyKey(stickyKey);
+        deleteStickyFromDOM(stickyKey);
+    }
+}
+
+function deleteStickyKey(stickyKey) {
+    var stickyKeyArray = getStickyKeyArray();
+    stickyKeyArray.splice(stickyKeyArray.indexOf(stickyKey), 1);
+    localStorage["stickyKeyArray"] = JSON.stringify(stickyKeyArray);
+}
+
+function deleteStickyFromDOM(stickyKey) {
+    var sticky = document.getElementById(stickyKey);
+    sticky.parentElement.removeChild(sticky);
 }
