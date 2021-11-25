@@ -8,7 +8,18 @@
   </head>
   <body>
     <form>
-      <input type="text" id="stickyText">
+      <label for="stickyColor">Color: </label>
+      <select id="stickyColor">
+        <option value="lightgoldenrodyellow" selected>Yellow</option>
+        <option value="palegreen">Green</option> 
+        <option value="lightpink">Pink</option>
+        <option value="lightcoral">Coral</option>
+        <option value="lightblue">Blue</option>
+        <option value="lightslategray">Gray</option>
+      </select>
+      <label for="stickyText">Text: </label>
+      <input type="text" id="stickyText" 
+        placeholder="leave blank to create an empty sticky.">
       <input type="button" id="buttonAdd" value="Add Sticky">
     </form>
     <ul id="stickies"></ul>

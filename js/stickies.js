@@ -5,11 +5,13 @@ window.onload = function() {
 
 function createSticky() {
     var stickyKey = "sticky_" + (new Date()).getTime();
+    var sticky = {
+        text: document.getElementById("stickyText").value,
+        color: document.getElementById("stickyColor").value
+    };
     addNewKeyToStickyKeyArray(stickyKey);
-
-    var stickyText = document.getElementById("stickyText").value;
-    localStorage[stickyKey] = stickyText;
-    addStickyToDom(stickyKey, stickyText);
+    localStorage[stickyKey] = JSON.stringify(sticky);
+    addStickyToDom(stickyKey, sticky);
 }
 
 function addNewKeyToStickyKeyArray(stickyKey) {
@@ -25,10 +27,8 @@ function showAllExistingStickies() {
 
 function getStickyKeyArray() {
     var stickyKeyArray = localStorage["stickyKeyArray"];
-    if (stickyKeyArray) {
-        stickyKeyArray = JSON.parse(stickyKeyArray);
-    } else 
-        stickyKeyArray = createStickyKeyArray();
+    if (stickyKeyArray) stickyKeyArray = JSON.parse(stickyKeyArray);
+    else stickyKeyArray = createStickyKeyArray();
     return stickyKeyArray;
 }
 
@@ -39,17 +39,24 @@ function createStickyKeyArray() {
 }
 
 function showStickyMappedFrom(stickyKey) {
-    var stickyText = localStorage[stickyKey];
-    addStickyToDom(stickyKey, stickyText);
+    var sticky = JSON.parse(localStorage[stickyKey]);
+    addStickyToDom(stickyKey, sticky);
 }
 
-function addStickyToDom(stickyKey, stickyText) {
-    var sticky = document.createElement("li");
-    sticky.id = stickyKey;
-    sticky.className = "sticky";
-    sticky.innerHTML = stickyText;
-    sticky.onclick = deleteStickyIfConfirmed;
-    document.getElementById("stickies").appendChild(sticky);
+function addStickyToDom(stickyKey, sticky) {
+    var stickies = document.getElementById("stickies");
+    var stickyElement = createStickyElement(stickyKey, sticky);
+    stickies.insertBefore(stickyElement, stickies.firstChild) ;
+}
+
+function createStickyElement(stickyKey, sticky) {
+    var stickyElement = document.createElement("li");
+    stickyElement.id = stickyKey;
+    stickyElement.className = "sticky";
+    stickyElement.innerHTML = sticky.text;
+    stickyElement.style.backgroundColor = sticky.color;
+    stickyElement.onclick = deleteStickyIfConfirmed;
+    return stickyElement;
 }
 
 function deleteStickyIfConfirmed(event) {
