@@ -6,6 +6,10 @@ form input#stickyText {
     width: 350px;
 }
 
+form input#buttonClear {
+    float: right;
+}
+
 /* sticky */
 ul#stickies li {
     display: block;

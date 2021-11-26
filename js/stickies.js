@@ -1,7 +1,8 @@
-window.onload = function() {
+window.onload = function () {
     document.getElementById("buttonAdd").onclick = createSticky;
+    document.getElementById("buttonClear").onclick = clearAllStickies;
     showAllExistingStickies();
-}
+};
 
 function createSticky() {
     var stickyKey = "sticky_" + (new Date()).getTime();
@@ -10,14 +11,33 @@ function createSticky() {
         color: document.getElementById("stickyColor").value
     };
     addNewKeyToStickyKeyArray(stickyKey);
-    localStorage[stickyKey] = JSON.stringify(sticky);
-    addStickyToDom(stickyKey, sticky);
+    try {
+        localStorage[stickyKey] = JSON.stringify(sticky);
+        addStickyToDom(stickyKey, sticky);
+    } catch (error) {
+        alert(error);
+    }
+}
+
+function clearAllStickies() {
+    localStorage.clear();
+    clearAllStickiesFromDom();
+}
+
+function clearAllStickiesFromDom() {
+    var stickies = document.getElementById("stickies");
+    while (stickies.hasChildNodes())
+        stickies.removeChild(stickies.firstChild);
 }
 
 function addNewKeyToStickyKeyArray(stickyKey) {
     var stickyKeyArray = getStickyKeyArray();
     stickyKeyArray.push(stickyKey);
-    localStorage["stickyKeyArray"] = JSON.stringify(stickyKeyArray);
+    try {
+        localStorage["stickyKeyArray"] = JSON.stringify(stickyKeyArray);
+    } catch (error) {
+        alert(error);
+    }
 }
 
 function showAllExistingStickies() {
@@ -46,7 +66,7 @@ function showStickyMappedFrom(stickyKey) {
 function addStickyToDom(stickyKey, sticky) {
     var stickies = document.getElementById("stickies");
     var stickyElement = createStickyElement(stickyKey, sticky);
-    stickies.insertBefore(stickyElement, stickies.firstChild) ;
+    stickies.insertBefore(stickyElement, stickies.firstChild);
 }
 
 function createStickyElement(stickyKey, sticky) {
