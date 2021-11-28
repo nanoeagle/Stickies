@@ -4,42 +4,6 @@ window.onload = function () {
     showAllExistingStickies();
 };
 
-function createSticky() {
-    var stickyKey = "sticky_" + (new Date()).getTime();
-    var sticky = {
-        text: document.getElementById("stickyText").value,
-        color: document.getElementById("stickyColor").value
-    };
-    addNewKeyToStickyKeyArray(stickyKey);
-    try {
-        localStorage[stickyKey] = JSON.stringify(sticky);
-        addStickyToDom(stickyKey, sticky);
-    } catch (error) {
-        alert(error);
-    }
-}
-
-function clearAllStickies() {
-    localStorage.clear();
-    clearAllStickiesFromDom();
-}
-
-function clearAllStickiesFromDom() {
-    var stickies = document.getElementById("stickies");
-    while (stickies.hasChildNodes())
-        stickies.removeChild(stickies.firstChild);
-}
-
-function addNewKeyToStickyKeyArray(stickyKey) {
-    var stickyKeyArray = getStickyKeyArray();
-    stickyKeyArray.push(stickyKey);
-    try {
-        localStorage["stickyKeyArray"] = JSON.stringify(stickyKeyArray);
-    } catch (error) {
-        alert(error);
-    }
-}
-
 function showAllExistingStickies() {
     var stickyKeyArray = getStickyKeyArray();
     for (var stickyKey of stickyKeyArray) showStickyMappedFrom(stickyKey);
@@ -77,24 +41,4 @@ function createStickyElement(stickyKey, sticky) {
     stickyElement.style.backgroundColor = sticky.color;
     stickyElement.onclick = deleteStickyIfConfirmed;
     return stickyElement;
-}
-
-function deleteStickyIfConfirmed(event) {
-    if (window.confirm("DELETE this sticky?")) {
-        var stickyKey = event.target.id;
-        localStorage.removeItem(stickyKey);
-        deleteStickyKey(stickyKey);
-        deleteStickyFromDOM(stickyKey);
-    }
-}
-
-function deleteStickyKey(stickyKey) {
-    var stickyKeyArray = getStickyKeyArray();
-    stickyKeyArray.splice(stickyKeyArray.indexOf(stickyKey), 1);
-    localStorage["stickyKeyArray"] = JSON.stringify(stickyKeyArray);
-}
-
-function deleteStickyFromDOM(stickyKey) {
-    var sticky = document.getElementById(stickyKey);
-    sticky.parentElement.removeChild(sticky);
 }
