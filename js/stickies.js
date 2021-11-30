@@ -1,4 +1,5 @@
 window.onload = function () {
+    document.getElementById("stickyText").onkeydown = handleKeyPressInStickyText;
     document.getElementById("buttonAdd").onclick = createSticky;
     document.getElementById("buttonClear").onclick = clearAllStickies;
     showAllExistingStickies();

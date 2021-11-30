@@ -1,3 +1,13 @@
+function  handleKeyPressInStickyText(event) {
+    var buttonAdd = document.getElementById("buttonAdd");
+    if (event.key === "Enter") {
+        buttonAdd.click();
+        // we return false so the form doesn't do anything else 
+        // (like try to submit itself).
+        return false;
+    }
+}
+
 function createSticky() {
     var stickyKey = "sticky_" + (new Date()).getTime();
     var sticky = {
